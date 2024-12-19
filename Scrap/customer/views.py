@@ -16,17 +16,20 @@ def profile_customer(request:HttpRequest):
    try:
       customer =  ProfileCustomer.objects.get(user=request.user)
    except ProfileCustomer.DoesNotExist:
-        messages.error(request, "لا يوجد لديك حساب مسجل")
+        messages.error(request, "لا يوجد لديك حساب مسجل", "alert-danger")
         return redirect("accounts:sign_up")
      
    pending_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.PENDING)
    accepted_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.ACCEPTED)
    denied_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.DENIED)
+   delivered_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.DELIVERED)
+   
 
    context = {
         "pending_orders": pending_orders,
         "accepted_orders": accepted_orders,
         "denied_orders": denied_orders,
+        'delivered_orders': delivered_orders,
         'profile': customer,
     }
  
